@@ -1,7 +1,12 @@
-import Sidebar from "../components/Sidebar";
+
+import { getServerSession } from "next-auth";
+import Sidebar from "../../../components/Sidebar";
+import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
 
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await getServerSession(nextAuthOptions)
+  console.log(session)
   return (
     <>
       <Sidebar />
