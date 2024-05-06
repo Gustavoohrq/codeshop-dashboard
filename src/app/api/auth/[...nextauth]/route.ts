@@ -1,14 +1,10 @@
 
-import axios from "axios";
 import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
-import jwt from "jsonwebtoken"; // Importar a biblioteca jsonwebtoken
+import jwt from "jsonwebtoken"; 
+import axiosInstance from "@/app/services/api";
 
-const instance = axios.create({
-    baseURL: process.env.URL_API,
-    timeout: 5000,
-});
 const nextAuthOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
@@ -19,7 +15,7 @@ const nextAuthOptions: NextAuthOptions = {
             },
 
             async authorize(credentials, req) {
-                const response = await instance.post('/login', { email: credentials?.email, password: credentials?.password }, {
+                const response = await axiosInstance.post('/login', { email: credentials?.email, password: credentials?.password }, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -33,7 +29,7 @@ const nextAuthOptions: NextAuthOptions = {
         })
     ],
     pages: {
-        signIn: '/login'
+        signIn: '/login',
     },
     callbacks: {
         async jwt({ token, user }) {

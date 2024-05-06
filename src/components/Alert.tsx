@@ -1,18 +1,20 @@
+'use client'
+
 import { useState, useEffect } from 'react';
 
 interface AlertProps {
     message: string;
-    showAlert: boolean; 
+    showAlert: boolean;
     alertType: 'error' | 'success';
 }
 
 const Alert: React.FC<AlertProps> = ({ message, showAlert, alertType }) => {
     const [visible, setVisible] = useState(showAlert);
-
     useEffect(() => {
         let timer: NodeJS.Timeout;
 
         if (visible) {
+            setVisible(true);
             timer = setTimeout(() => {
                 setVisible(false);
             }, 3000);
@@ -24,9 +26,8 @@ const Alert: React.FC<AlertProps> = ({ message, showAlert, alertType }) => {
             }
         };
     }, [visible]);
-    const alertClassName = `fixed block right-0 w-1/4 p-4 m-4 text-base leading-5 text-white rounded-lg roboto-regular ${
-        alertType === 'error' ? 'bg-red-500' : 'bg-green-500'
-    }`;
+    const alertClassName = `fixed block right-0 w-1/4 p-4 m-4 text-base leading-5 text-white rounded-lg roboto-regular ${alertType === 'error' ? 'bg-red-500' : 'bg-green-500'
+        }`;
     return (
         <>
             {visible && (
