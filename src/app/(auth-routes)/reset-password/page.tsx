@@ -8,8 +8,9 @@ import { object, ref, string } from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import ForgotPasswordImage from "@/components/svgs/ForgotPasswordImage";
 import { AxiosResponse } from "axios";
-export default function ResetPasssword() {
 
+
+export default function ResetPasssword() {
   const [alert, setAlert] = useState<[string, "error" | "success"] | null>(null);
   const validationSchema = object().shape({
     password: string()
@@ -21,6 +22,7 @@ export default function ResetPasssword() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
@@ -30,13 +32,14 @@ export default function ResetPasssword() {
   const token = searchParams.get('token');
   async function onSubmit(data: any) {
     try {
-
-      const response: AxiosResponse = await axiosInstance.post('reset-password', { data }, {
+      setAlert(null)
+      const response: AxiosResponse = await axiosInstance.post('reset-password', { password: data.password }, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         }
       })
+      reset()
       setAlert([response?.data?.message, "success"]);
     } catch (error: any) {
       setAlert([error?.response?.data?.message || 'Erro ao redefinir senha.', 'error']);

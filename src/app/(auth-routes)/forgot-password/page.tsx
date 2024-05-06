@@ -12,25 +12,33 @@ export default function ForgotPasssword() {
   const [alert, setAlert] = useState<[string, "error" | "success"] | null>(null);
   const validationSchema = object().shape({
     email: string()
+      .min(4, "A senha deve ter no mínimo 4 caracteres")
+      .max(20, "A senha deve ter no máximo 20 caracteres")
+      .matches(
+        /((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/,
+        'A senha é fraca. Deve conter pelo menos uma letra maiúscula, uma letra minúscula e um número ou caractere especial'
+      )
       .required('Por favor, digite seu email'),
   });
 
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   })
   async function onSubmitForm(data: object) {
-    setAlert(null)
     try {
-      const response: AxiosResponse = await axiosInstance.post('forgot-password', { data }, {
+      setAlert(null)
+      const response: AxiosResponse = await axiosInstance.post('forgot-password', data, {
         headers: {
           'Content-Type': 'application/json'
         }
       })
-      setAlert([response.data.message, "success"]);
+      setAlert([response?.data?.message, "success"]);
+      reset()
     } catch (error: any) {
       setAlert([error?.response?.data?.message || 'Erro ao enviar email de reset.', 'error']);
       return
@@ -53,8 +61,8 @@ export default function ForgotPasssword() {
             <input
               className="p-2 block w-full  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
               type="text"
-              name="email"
               placeholder="Digite seu e-mail"
+              {...register('email')}
             />
             {errors.email && (
               <p className="text-xs roboto-medium  text-red-500">{errors.email.message}</p>

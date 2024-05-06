@@ -13,7 +13,7 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter()
   const validationSchema = object().shape({
-    email: string().email('Email incorreto.')
+    email: string().email('Email inválido.')
       .required('Por favor, digite seu email'),
     password: string()
       .required('Por favor, digite sua nova senha')

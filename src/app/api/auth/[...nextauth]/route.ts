@@ -31,6 +31,10 @@ const nextAuthOptions: NextAuthOptions = {
     pages: {
         signIn: '/login',
     },
+    session: {
+        strategy: 'jwt',
+        maxAge: 300 
+    },
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
@@ -43,7 +47,7 @@ const nextAuthOptions: NextAuthOptions = {
               return token;    
         },
         async session({session, token}) {
-            session = token.user as any
+            session = token as any
             return session
         }
     }

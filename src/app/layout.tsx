@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-gray-50 dark:bg-gray-900">
+    <html lang="en" className="dark bg-gray-50 dark:bg-gray-900">
       <body className={inter.className}>
         <NextAuthSessionProvider>
           {children}
