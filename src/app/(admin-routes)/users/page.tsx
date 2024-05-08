@@ -5,9 +5,13 @@ import { useEffect, useState } from "react";
 import axiosInstance from "@/app/services/api";
 import { AxiosResponse } from "axios";
 import { useSession } from "next-auth/react";
+import { PencilIcon, Trash } from "lucide-react";
+import ModalUser from "@/components/ModalUser";
 
 export default function UsersPage() {
   const [users, setUsers] = useState<object[]>([]);
+  const [user, setUser] = useState<object>([]);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const { data } = useSession()
 
   useEffect(() => {
@@ -33,6 +37,7 @@ export default function UsersPage() {
   return (
     <>
       <Sidebar />
+      <ModalUser isOpen={openModal} setModalOpen={() => setOpenModal(!openModal)} title="Editar usuário" data={user} />
       <div className="p-5 sm:ml-72 bg-gray-50 dark:bg-gray-900">
         <div className="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700">
           <div className="grid gap-4 mb-4">
@@ -54,13 +59,16 @@ export default function UsersPage() {
                       Email
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      CPF
+                      Status
                     </th>
                     <th scope="col" className="px-6 py-3">
                       Cargo
                     </th>
                     <th scope="col" className="px-6 py-3">
                       <span className="sr-only">Edit</span>
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      <span className="sr-only">Remove</span>
                     </th>
                   </tr>
                 </thead>
@@ -74,13 +82,16 @@ export default function UsersPage() {
                         {user.email}
                       </td>
                       <td className="px-6 py-4">
-                        {user.cpf}
+                        {user.status}
                       </td>
                       <td className="px-6 py-4">
                         {user.role?.name}
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                        <PencilIcon size={18} onClick={() => {setOpenModal(true); setUser(user)}} className="cursor-pointer"/>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <Trash size={18} className="cursor-pointer"/>
                       </td>
                     </tr>
                   ))}
