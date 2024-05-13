@@ -1,6 +1,6 @@
 # CodeShop Dashboard
 
-Este é um aplicativo web construído com Next.js, NextAuth.js, e JWT para fornecer uma interface intuitiva e eficiente para gerenciar uma loja online. Abaixo você encontrará uma descrição detalhada das principais funcionalidades e como utilizar cada uma delas.
+Este é um aplicativo web construído com Next.js, NextAuth.js, e JWT para fornecer uma interface simples e eficiente para gerenciar uma loja online. 
 
 ## Funcionalidades Principais
 
@@ -32,7 +32,6 @@ Na página de usuários, é possível visualizar e administrar os usuários da p
 
 - **NextAuth.js**: Uma biblioteca de autenticação para Next.js que simplifica a implementação de autenticação com várias estratégias, incluindo JWT.
 
-- **JWT (JSON Web Tokens)**: Um método seguro e eficiente para autenticar usuários em aplicativos web.
 
 ## Como Executar Localmente
 
@@ -47,14 +46,14 @@ Para executar o Dashboard de Loja Online localmente, siga estas etapas:
 2. **Instale as Dependências**: Navegue até o diretório do projeto e instale as dependências necessárias utilizando o npm ou yarn:
 
    ```
-   cd dashboard-loja-online
+   cd codeshop-dashboard
    npm install
    ```
 
    ou
 
    ```
-   cd dashboard-loja-online
+   cd codeshop-dashboard
    yarn
    ```
 
