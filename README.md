@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# CodeShop Dashboard
 
-## Getting Started
+Este é um aplicativo web construído com Next.js, NextAuth.js, e JWT para fornecer uma interface intuitiva e eficiente para gerenciar uma loja online. Abaixo você encontrará uma descrição detalhada das principais funcionalidades e como utilizar cada uma delas.
 
-First, run the development server:
+## Funcionalidades Principais
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Estatísticas de Vendas
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Na página principal do Dashboard, você encontrará estatísticas de vendas em tempo real, proporcionando insights valiosos sobre o desempenho da sua loja. Os gráficos e métricas apresentados ajudam a compreender o volume de vendas, tendências de consumo e outras informações importantes para tomar decisões estratégicas.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Gerenciamento de Produtos
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+A página de produtos oferece ferramentas completas para cadastrar, editar e remover produtos do catálogo da loja. Com uma interface intuitiva, é fácil adicionar novos produtos, atualizar informações existentes e manter o inventário sempre atualizado.
 
-## Learn More
+### Gerenciamento de Usuários
 
-To learn more about Next.js, take a look at the following resources:
+Na página de usuários, é possível visualizar e administrar os usuários da plataforma. Com o NextAuth.js e JWT, você pode controlar o acesso de usuários com diferentes níveis de permissão, garantindo a segurança dos dados da sua loja.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Como Utilizar
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. **Login**: Faça login na aplicação utilizando suas credenciais de usuário.
 
-## Deploy on Vercel
+2. **Estatísticas de Vendas**: Na página inicial, você terá acesso às estatísticas de vendas em tempo real, apresentadas de forma clara e visualmente atraente.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Gerenciamento de Produtos**: Acesse a página de produtos para adicionar, editar ou remover produtos do catálogo da sua loja. Utilize os formulários intuitivos para inserir informações detalhadas sobre cada produto.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. **Gerenciamento de Usuários**: Na página de usuários, você pode visualizar e administrar os usuários da plataforma. Controle o acesso de usuários e atribua diferentes níveis de permissão conforme necessário.
+
+## Tecnologias Utilizadas
+
+- **Next.js**: Um framework React que facilita a construção de aplicativos web modernos e eficientes.
+
+- **NextAuth.js**: Uma biblioteca de autenticação para Next.js que simplifica a implementação de autenticação com várias estratégias, incluindo JWT.
+
+- **JWT (JSON Web Tokens)**: Um método seguro e eficiente para autenticar usuários em aplicativos web.
+
+## Como Executar Localmente
+
+Para executar o Dashboard de Loja Online localmente, siga estas etapas:
+
+1. **Clone o Repositório**: Clone este repositório para o seu ambiente local utilizando o seguinte comando:
+
+   ```
+   git clone https://github.com/Gustavoohrq/codeshop-dashboard.git
+   ```
+
+2. **Instale as Dependências**: Navegue até o diretório do projeto e instale as dependências necessárias utilizando o npm ou yarn:
+
+   ```
+   cd dashboard-loja-online
+   npm install
+   ```
+
+   ou
+
+   ```
+   cd dashboard-loja-online
+   yarn
+   ```
+
+3. **Configure as Variáveis de Ambiente**: Crie um arquivo `.env.local` na raiz do projeto e configure as variáveis de ambiente necessárias, como as chaves secretas para NextAuth.js e outras configurações específicas do ambiente.
+
+4. **Inicie o Servidor de Desenvolvimento**: Execute o seguinte comando para iniciar o servidor de desenvolvimento:
+
+   ```
+   npm run dev
+   ```
+
+   ou
+
+   ```
+   yarn dev
+   ```
+
+5. **Acesse o Aplicativo**: Abra o navegador e acesse o aplicativo em `http://localhost:3000`. Você será redirecionado para a página de login, onde poderá fazer login com suas credenciais de usuário.
+
+Com estas instruções, você estará pronto para explorar e utilizar o Dashboard de Loja Online em seu ambiente local!
+
