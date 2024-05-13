@@ -1,8 +1,7 @@
-
 import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
-import jwt from "jsonwebtoken"; 
+import jwt from "jsonwebtoken";
 import axiosInstance from "@/app/services/api";
 
 const nextAuthOptions: NextAuthOptions = {
@@ -20,33 +19,38 @@ const nextAuthOptions: NextAuthOptions = {
                         'Content-Type': 'application/json'
                     }
                 })
+
                 const user = response.data
                 if (user && response.status === 200) {
                     return user
+                } else {
+                    return null
                 }
-                return null
             },
         })
     ],
     pages: {
         signIn: '/login',
     },
-    session: {
-        strategy: 'jwt',
-        maxAge: 300 
-    },
+
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token.accessToken = user.access_token;
-                const decodedToken = jwt.decode(user.access_token);
-                if (decodedToken) {
-                    token.user = decodedToken;
-                  }
-              }
-              return token;    
+                token.accessToken = user?.access_token as string;
+                const decodedToken = jwt.decode(user?.access_token);
+                if (decodedToken && decodedToken.exp * 1000 < Date.now()) { // Verifica a expiração do token
+                    // Token expirado, força o logout
+                    return { ...token, error: 'token_expired' };
+                }
+                token.user = decodedToken;
+            }
+            return token;
         },
-        async session({session, token}) {
+        async session({ session, token }) {
+            if (token && token.error === 'token_expired') {
+                // Token expirado, força o logout
+                return;
+            }
             session = token as any
             return session
         }

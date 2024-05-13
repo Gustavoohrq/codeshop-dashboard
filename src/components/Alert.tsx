@@ -26,7 +26,7 @@ const Alert: React.FC<AlertProps> = ({ message, showAlert, alertType }) => {
             }
         };
     }, [visible]);
-    const alertClassName = `fixed block right-0 w-1/4 p-4 m-4 text-base leading-5 text-white rounded-lg roboto-regular ${alertType === 'error' ? 'bg-red-500' : 'bg-green-500'
+    const alertClassName = `fixed block right-0 w-1/4 p-4 m-4  z-50 text-base leading-5 text-white rounded-lg roboto-regular ${alertType === 'error' ? 'bg-red-500' : 'bg-green-500'
         }`;
     return (
         <>
