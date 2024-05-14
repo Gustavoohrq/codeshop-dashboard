@@ -6,47 +6,53 @@ import axiosInstance from "@/app/services/api";
 import { AxiosResponse } from "axios";
 import { useSession } from "next-auth/react";
 import { PencilIcon, Trash } from "lucide-react";
-import ModalUser from "@/components/ModalUser";
+import ModalProduct from "@/components/ModalProduct";
 
-export default function UsersPage() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [user, setUser] = useState<User | null>(null);
+export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [product, setProduct] = useState<Product | null>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]); // Estado para armazenar os usuários filtrados
-  const [searchTerm, setSearchTerm] = useState<string>(''); // Estado para armazenar
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const session: any = useSession()
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (session?.data) {
-          const response: AxiosResponse = await axiosInstance.get('user', {
+          const response: AxiosResponse = await axiosInstance.get('products', {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${session?.data?.accessToken}`
             }
           });
-          setUsers(response.data);
+          setProducts(response.data);
         }
       } catch (error) {
-        console.error('Erro ao buscar dados do usuário:', error);
+        console.error('Erro ao buscar dados do produto:', error);
       }
     };
 
     fetchData();
   }, [session?.data?.accessToken]);
   useEffect(() => {
-    const filtered = users.filter(user =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    const filtered = products.filter(product =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setFilteredUsers(filtered);
-  }, [searchTerm, users]);
+    setFilteredProducts(filtered);
+  }, [searchTerm, products]);
+  const formatCurrency = (value) => {
+    const formatter = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+    return formatter.format(value);
+  };
   return (
     <>
       <Sidebar />
 
-      <ModalUser isOpen={openModal} setModalOpen={() => setOpenModal(!openModal)} deleteModal={deleteModal} title={`${user ? "Editar usuário" : "Criar usuário"}`} user={user} />
+      <ModalProduct isOpen={openModal} setModalOpen={() => setOpenModal(!openModal)} deleteModal={deleteModal} title={`${product ? "Editar produto" : "Criar produto"}`} product={product} />
       <div className="p-5 sm:ml-72 bg-gray-50 dark:bg-gray-900">
 
         <div className="p-4 border-2 border-gray-200 rounded-lg dark:border-gray-700">
@@ -60,9 +66,9 @@ export default function UsersPage() {
               </div>
               {session?.data?.user?.role?.name == "ADMIN" ?
                 <div className="pb-4 bg-white dark:bg-gray-900 ">
-                  <button type="submit" onClick={() => { setOpenModal(true); setUser(null); setDeleteModal(false) }} className="text-white mr-6 inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  <button type="submit" onClick={() => { setOpenModal(true); setProduct(null); setDeleteModal(false) }} className="text-white mr-6 inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                     <svg className="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
-                    Criar usuário
+                    Criar produto
                   </button>
                 </div>
                 : <></>
@@ -75,17 +81,15 @@ export default function UsersPage() {
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" className="px-6 py-3">
+                      Imagem
+                    </th>
+                    <th scope="col" className="px-6 py-3">
                       Nome
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      Email
+                      Preço
                     </th>
-                    <th scope="col" className="px-6 py-3">
-                      Status
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Cargo
-                    </th>
+
                     {session?.data?.user?.role?.name == "ADMIN" ?
                       <>
                         <th scope="col" className="px-6 py-3">
@@ -100,33 +104,25 @@ export default function UsersPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredUsers.map((user, index) => (
+                  {filteredProducts.map((product, index) => (
                     <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                      <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {user.name}
+                      <th className="px-6 py-4">
+                    
+                      <img className={`h-10 w-10 rounded-full`} src={URL.createObjectURL(new Blob([Buffer.from(product.picture)]))} />
                       </th>
-                      <td className="px-6 py-4">
-                        {user.email}
+                      <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {product.name}
                       </td>
                       <td className="px-6 py-4">
-
-                        {user.status == "active" ?
-                          <span className="px-2 py-1  font-semibold leading-tight text-green-700 bg-green-100 rounded-sm"> Ativo </span>
-                          :
-                          <span className="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-sm"> Inativo </span>
-                        }
-                      </td>
-                      <td className="px-6 py-4">
-
-                        {user.role?.name}
+                         {formatCurrency(product.price)}
                       </td>
                       {session?.data?.user.role?.name == "ADMIN" ?
                         <>
                           <td className="px-6 py-4 text-right">
-                            <PencilIcon size={18} onClick={() => { setOpenModal(true); setUser(user); setDeleteModal(false) }} className="cursor-pointer" />
+                            <PencilIcon size={18} onClick={() => { setOpenModal(true); setProduct(product); setDeleteModal(false) }} className="cursor-pointer" />
                           </td>
                           <td className="px-6 py-4 text-right">
-                            <Trash size={18} className="cursor-pointer" onClick={() => { setOpenModal(true); setUser(user); setDeleteModal(true) }} />
+                            <Trash size={18} className="cursor-pointer" onClick={() => { setOpenModal(true); setProduct(product); setDeleteModal(true) }} />
                           </td>
                         </>
                         : <></>
