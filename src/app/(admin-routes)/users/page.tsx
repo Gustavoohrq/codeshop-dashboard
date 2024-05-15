@@ -23,7 +23,7 @@ export default function UsersPage() {
           const response: AxiosResponse = await axiosInstance.get('user', {
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${session?.data?.accessToken}`
+              'Authorization': `Bearer ${session?.data?.access_token}`
             }
           });
           setUsers(response.data);
@@ -34,7 +34,7 @@ export default function UsersPage() {
     };
 
     fetchData();
-  }, [session?.data?.accessToken]);
+  }, [session?.data?.access_token]);
   useEffect(() => {
     const filtered = users.filter(user =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -120,7 +120,7 @@ export default function UsersPage() {
 
                         {user.role?.name}
                       </td>
-                      {session?.data?.user.role?.name == "ADMIN" ?
+                      {session?.data?.user?.role?.name == "ADMIN" ?
                         <>
                           <td className="px-6 py-4 text-right">
                             <PencilIcon size={18} onClick={() => { setOpenModal(true); setUser(user); setDeleteModal(false) }} className="cursor-pointer" />

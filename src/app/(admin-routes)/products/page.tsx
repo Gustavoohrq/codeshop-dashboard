@@ -23,7 +23,7 @@ export default function ProductsPage() {
           const response: AxiosResponse = await axiosInstance.get('products', {
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${session?.data?.accessToken}`
+              'Authorization': `Bearer ${session?.data?.access_token}`
             }
           });
           setProducts(response.data);
@@ -34,19 +34,19 @@ export default function ProductsPage() {
     };
 
     fetchData();
-  }, [session?.data?.accessToken]);
+  }, [session?.data?.access_token]);
   useEffect(() => {
     const filtered = products.filter(product =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredProducts(filtered);
   }, [searchTerm, products]);
-  const formatCurrency = (value) => {
+  const formatCurrency = (value: string) => {
     const formatter = new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL',
     });
-    return formatter.format(value);
+    return formatter.format(parseFloat(value));
   };
   return (
     <>
@@ -107,16 +107,16 @@ export default function ProductsPage() {
                   {filteredProducts.map((product, index) => (
                     <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                       <th className="px-6 py-4">
-                    
-                      <img className={`h-10 w-10 rounded-full`} src={URL.createObjectURL(new Blob([Buffer.from(product.picture)]))} />
+
+                        <img className={`h-16 w-16 rounded-xl`} src={URL.createObjectURL(new Blob([Buffer.from(product.picture)]))} />
                       </th>
                       <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         {product.name}
                       </td>
                       <td className="px-6 py-4">
-                         {formatCurrency(product.price)}
+                        {formatCurrency(product.price)}
                       </td>
-                      {session?.data?.user.role?.name == "ADMIN" ?
+                      {session?.data?.user?.role?.name == "ADMIN" ?
                         <>
                           <td className="px-6 py-4 text-right">
                             <PencilIcon size={18} onClick={() => { setOpenModal(true); setProduct(product); setDeleteModal(false) }} className="cursor-pointer" />

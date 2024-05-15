@@ -6,7 +6,6 @@ import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export default async function HomePage() {
   const session = await getServerSession(nextAuthOptions)
-  console.log(session)
   return (
     <>
       <Sidebar />
@@ -35,7 +34,6 @@ export default async function HomePage() {
               </p>
             </div>
           </div>
-          
         </div>
       </div>
     </>

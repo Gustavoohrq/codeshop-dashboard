@@ -37,11 +37,10 @@ export default function ModalUser({ isOpen, setModalOpen, title, user, deleteMod
     async function handleCreateUser(data: object) {
         try {
             setAlert(null)
-            console.log(data)
             const response: AxiosResponse = await axiosInstance.post('user', data, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session.data.accessToken}`
+                    'Authorization': `Bearer ${session?.data?.access_token}`
 
                 }
             })
@@ -60,7 +59,7 @@ export default function ModalUser({ isOpen, setModalOpen, title, user, deleteMod
             await axiosInstance.put(`user/${user?.id}`, data, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session.data.accessToken}`
+                    'Authorization': `Bearer ${session?.data?.access_token}`
                 }
             });
             setAlert(["Usuário atualizado com sucesso.", "success"]);
@@ -79,7 +78,7 @@ export default function ModalUser({ isOpen, setModalOpen, title, user, deleteMod
             await axiosInstance.delete(`user/${user?.id}`, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session.data.accessToken}`
+                    'Authorization': `Bearer ${session?.data?.access_token}`
                 }
             });
             setAlert(["Usuário deletado com sucesso.", "success"]);

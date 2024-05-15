@@ -7,7 +7,7 @@ interface NavbarProps {
 export default function Navbar({ toggleTheme, isDark }: NavbarProps) {
     return (
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 h-10 bg-slate-600">
             <button
                 className="text-gray-800 dark:text-white hover:text-gray-900 dark:hover:text-gray-200"
                 onClick={toggleTheme}

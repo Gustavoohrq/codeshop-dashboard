@@ -39,7 +39,7 @@ export default function ModalProduct({ isOpen, setModalOpen, title, product, del
         handleSubmit,
     } = useForm()
     const session: any = useSession()
-    const handleFileChange = (e) => {
+    const handleFileChange = (e: any) => {
         setFile(e.target.files[0]);
     };
 
@@ -65,7 +65,7 @@ export default function ModalProduct({ isOpen, setModalOpen, title, product, del
             await axiosInstance.post('products', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${session.data.accessToken}`
+                    'Authorization': `Bearer ${session?.data?.access_token}`
                 }
             });
             setAlert(["Produto criado com sucesso.", "success"]);
@@ -83,7 +83,7 @@ export default function ModalProduct({ isOpen, setModalOpen, title, product, del
             await axiosInstance.put(`products/${product?.id}`, data, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session.data.accessToken}`
+                    'Authorization': `Bearer ${session?.data?.access_token}`
                 }
             });
             setAlert(["Produto atualizado com sucesso.", "success"]);
@@ -102,7 +102,7 @@ export default function ModalProduct({ isOpen, setModalOpen, title, product, del
             await axiosInstance.delete(`products/${product?.id}`, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session.data.accessToken}`
+                    'Authorization': `Bearer ${session?.data?.access_token}`
                 }
             });
             setAlert(["Produto deletado com sucesso.", "success"]);
@@ -176,6 +176,8 @@ export default function ModalProduct({ isOpen, setModalOpen, title, product, del
                                             <div className="col-span-2">
 
                                                 <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome</label>
+                                                <input type="text" onChange={handleFileChange} {...register('name')} name="name" id="name" className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Nome produto" />
+
                                             </div>
                                             <div className="col-span-2">
                                                 <label htmlFor="picture" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Foto Produto</label>

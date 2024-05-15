@@ -1,26 +1,16 @@
 'use client'
-import { LogOut, LayoutDashboard, Users, Store, Code2Icon } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, Store, } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Navbar from './NavBar';
+import { useSession } from "next-auth/react";
+
 import { useEffect, useState } from 'react';
 
 export default function Sidebar() {
-    const [isDark, setIsDark] = useState(true); // Estado para controlar o tema
+    const [isDark, setIsDark] = useState(true);
+    const session: any = useSession()
+    console.log(session?.data?.user?.picture)
     const router = useRouter()
-
-    useEffect(() => {
-        const rootElement = document.documentElement;
-        if (isDark) {
-            rootElement.classList.add('dark');
-        } else {
-            rootElement.classList.remove('dark');
-        }
-    }, [isDark]);
-    const toggleTheme = () => {
-        setIsDark((prev) => !prev);
-    };
-
     async function logout() {
         signOut({
             redirect: false
@@ -30,17 +20,21 @@ export default function Sidebar() {
     }
     return (
         <>
-            {/* <Navbar toggleTheme={toggleTheme} isDark={isDark} /> */}
-            <aside id="default-sidebar" className="fixed top-0 left-0 z-40 w-72 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-                <div className="h-full px-4 py-4 overflow-y-auto bg-gray-100 dark:bg-gray-800">
-                    <div className="flex items-center p-3.5 mb-5">
-                        <Code2Icon className="h-6 w-6 me-3 sm:h-7 dark:text-white" />
-                        <span className="text-xl font-bold whitespace-nowrap dark:text-white">CodeShop</span>
+            <aside id="default-sidebar" className=" fixed bg-gray-100 px-4 py-4 dark:text-white  dark:bg-gray-800 top-0 left-0 z-40 w-72 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+                <div className="flex items-center p-2 space-x-4 mb-5">
+                    <img src={session?.data?.user?.picture  ? session?.data?.user?.picture : `https://robohash.org/${session?.data?.user?.email}`} alt="" className="w-12 h-12 rounded-full dark:bg-gray-500" />
+                    <div>
+                        <h2 className="text-lg font-semibold">{session?.data?.user?.name || ""}</h2>
+                        <span className="flex items-center space-x-1">
+                            <a rel="noopener noreferrer" href="account" className="text-xs hover:underline dark:text-gray-400 ">Ver perfil</a>
+                        </span>
                     </div>
+                </div>
+                <div className="h-full overflow-y-auto ">
                     <div className="w-full bg-gray-600 h-px"></div>
                     <ul className="mt-4 space-y-2 font-medium">
                         <li>
-                            <a href="#" className="flex items-center p-3 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                            <a href="home" className="flex items-center p-3 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                                 <LayoutDashboard className="w-5 h-5" />
                                 <span className="ms-3">Dashboard</span>
                             </a>
@@ -65,6 +59,7 @@ export default function Sidebar() {
                         </li>
                     </ul>
                 </div>
+
             </aside>
         </>
     );
