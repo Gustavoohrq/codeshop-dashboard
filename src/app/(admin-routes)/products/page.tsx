@@ -7,8 +7,10 @@ import { AxiosResponse } from "axios";
 import { useSession } from "next-auth/react";
 import { PencilIcon, Trash } from "lucide-react";
 import ModalProduct from "@/components/ModalProduct";
+import Loading from "@/components/Loading";
 
 export default function ProductsPage() {
+  const [loading, setLoading] = useState<boolean>(true);
   const [products, setProducts] = useState<Product[]>([]);
   const [product, setProduct] = useState<Product | null>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -16,31 +18,44 @@ export default function ProductsPage() {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const session: any = useSession()
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (session?.data) {
-          const response: AxiosResponse = await axiosInstance.get('products', {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${session?.data?.access_token}`
-            }
-          });
-          setProducts(response.data);
-        }
-      } catch (error) {
-        console.error('Erro ao buscar dados do produto:', error);
-      }
-    };
 
-    fetchData();
+  useEffect(() => {
+    fetchProducts();
   }, [session?.data?.access_token]);
+
+  useEffect(() => {
+    if (!openModal) {
+      fetchProducts();
+    }
+  }, [openModal]);
+
+
   useEffect(() => {
     const filtered = products.filter(product =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredProducts(filtered);
   }, [searchTerm, products]);
+
+  const fetchProducts = async () => {
+    try {
+      if (session?.data) {
+        const response: AxiosResponse = await axiosInstance.get('products', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session?.data?.access_token}`
+          }
+        });
+        setProducts(response.data);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error('Erro ao buscar dados do produto:', error);
+    }
+  };
+
+
   const formatCurrency = (value: string) => {
     const formatter = new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -48,6 +63,7 @@ export default function ProductsPage() {
     });
     return formatter.format(parseFloat(value));
   };
+
   return (
     <>
       <Sidebar />
@@ -76,63 +92,70 @@ export default function ProductsPage() {
 
             </div>
 
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-              <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="px-6 py-3">
-                      Imagem
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Nome
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Preço
-                    </th>
 
-                    {session?.data?.user?.role?.name == "ADMIN" ?
-                      <>
-                        <th scope="col" className="px-6 py-3">
-                          <span className="sr-only">Edit</span>
-                        </th>
-                        <th scope="col" className="px-6 py-3">
-                          <span className="sr-only">Remove</span>
-                        </th>
-                      </>
-                      : <></>
-                    }
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredProducts.map((product, index) => (
-                    <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                      <th className="px-6 py-4">
+            {loading ?
 
-                        <img className={`h-16 w-16 rounded-xl`} src={URL.createObjectURL(new Blob([Buffer.from(product.picture)]))} />
+              <Loading />
+              :
+              <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                      <th scope="col" className="px-6 py-3">
+                        Imagem
                       </th>
-                      <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {product.name}
-                      </td>
-                      <td className="px-6 py-4">
-                        {formatCurrency(product.price)}
-                      </td>
+                      <th scope="col" className="px-6 py-3">
+                        Nome
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Preço
+                      </th>
+
                       {session?.data?.user?.role?.name == "ADMIN" ?
                         <>
-                          <td className="px-6 py-4 text-right">
-                            <PencilIcon size={18} onClick={() => { setOpenModal(true); setProduct(product); setDeleteModal(false) }} className="cursor-pointer" />
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                            <Trash size={18} className="cursor-pointer" onClick={() => { setOpenModal(true); setProduct(product); setDeleteModal(true) }} />
-                          </td>
+                          <th scope="col" className="px-6 py-3">
+                            <span className="sr-only">Edit</span>
+                          </th>
+                          <th scope="col" className="px-6 py-3">
+                            <span className="sr-only">Remove</span>
+                          </th>
                         </>
                         : <></>
                       }
-
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {filteredProducts.map((product, index) => (
+                      <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <th className="px-6 py-4">
+
+                          <img className={`h-16 w-16 rounded-xl`} src={product.picture} />
+                        </th>
+                        <td scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                          {product.name}
+                        </td>
+                        <td className="px-6 py-4">
+                          {formatCurrency(product.price)}
+                        </td>
+                        {session?.data?.user?.role?.name == "ADMIN" ?
+                          <>
+                            <td className="px-6 py-4 text-right">
+                              <PencilIcon size={18} onClick={() => { setOpenModal(true); setProduct(product); setDeleteModal(false) }} className="cursor-pointer" />
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                              <Trash size={18} className="cursor-pointer" onClick={() => { setOpenModal(true); setProduct(product); setDeleteModal(true) }} />
+                            </td>
+                          </>
+                          : <></>
+                        }
+
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+            }
           </div>
         </div>
       </div>

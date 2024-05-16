@@ -4,6 +4,7 @@ interface Product {
     description: string,
     category: string,
     price: string,
+    quantity: number,
     picture: string,
 }
 

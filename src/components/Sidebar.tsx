@@ -7,10 +7,10 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from 'react';
 
 export default function Sidebar() {
-    const [isDark, setIsDark] = useState(true);
     const session: any = useSession()
-    console.log(session?.data?.user?.picture)
     const router = useRouter()
+
+
     async function logout() {
         signOut({
             redirect: false
@@ -22,7 +22,7 @@ export default function Sidebar() {
         <>
             <aside id="default-sidebar" className=" fixed bg-gray-100 px-4 py-4 dark:text-white  dark:bg-gray-800 top-0 left-0 z-40 w-72 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
                 <div className="flex items-center p-2 space-x-4 mb-5">
-                    <img src={session?.data?.user?.picture  ? session?.data?.user?.picture : `https://robohash.org/${session?.data?.user?.email}`} alt="" className="w-12 h-12 rounded-full dark:bg-gray-500" />
+                    <img src={session?.data?.user?.picture ? session?.data?.user?.picture : `https://robohash.org/${session?.data?.user?.email}`} alt="" className="w-12 h-12 rounded-full dark:bg-gray-500" />
                     <div>
                         <h2 className="text-lg font-semibold">{session?.data?.user?.name || ""}</h2>
                         <span className="flex items-center space-x-1">

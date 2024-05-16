@@ -39,8 +39,9 @@ export default function ModalPassword({ isOpen, setModalOpen, user }: NavbarProp
 
     async function onSubmit(data: any) {
         try {
+            delete data.passwordNewConfirmation
             setAlert(null)
-            const response: AxiosResponse = await axiosInstance.post('reset-password', data, {
+            const response: AxiosResponse = await axiosInstance.post(`user/force-reset-password/${session?.data?.user?.id}`, data, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${session?.data?.access_token}`
@@ -48,6 +49,7 @@ export default function ModalPassword({ isOpen, setModalOpen, user }: NavbarProp
             })
             reset()
             setAlert([response?.data?.message, "success"]);
+            setModalOpen(false);
         } catch (error: any) {
             setAlert([error?.response?.data?.message || 'Erro ao redefinir senha.', 'error']);
             return

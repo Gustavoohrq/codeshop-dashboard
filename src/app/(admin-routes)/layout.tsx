@@ -12,7 +12,8 @@ export default async function PrivateAdminLayout({
   children,
 }: PrivateAdminLayoutProps) {
   const session = await getServerSession(nextAuthOptions)
-  if(!session) {
+  
+  if(session?.user.exp && Math.floor(Date.now() / 1000) > session?.user.exp || !session) {
     redirect('/login')
   }
   return <>{children}</>

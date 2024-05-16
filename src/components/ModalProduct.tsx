@@ -18,16 +18,16 @@ interface NavbarProps {
 const currencyConfig = {
     locale: "pt-BR",
     formats: {
-      number: {
-        BRL: {
-          style: "currency",
-          currency: "BRL",
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
+        number: {
+            BRL: {
+                style: "currency",
+                currency: "BRL",
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            },
         },
-      },
     },
-  };
+};
 
 export default function ModalProduct({ isOpen, setModalOpen, title, product, deleteModal }: NavbarProps) {
     const [alert, setAlert] = useState<[string, "error" | "success"] | null>(null);
@@ -49,6 +49,7 @@ export default function ModalProduct({ isOpen, setModalOpen, title, product, del
             name: product?.name || "",
             description: product?.description || "",
             price: product?.price || "",
+            quantity: product?.quantity || "",
             picture: product?.picture || "",
         })
     }, [product]);
@@ -59,7 +60,8 @@ export default function ModalProduct({ isOpen, setModalOpen, title, product, del
             const formData = new FormData();
             formData.append('name', data.name);
             formData.append('description', data.description);
-            formData.append('price', data.price);
+            formData.append('price', Number(data.price));
+            formData.append('quantity', data.quantity);
             formData.append('category', data.category);
             formData.append('picture', file);
             await axiosInstance.post('products', formData, {
@@ -77,12 +79,19 @@ export default function ModalProduct({ isOpen, setModalOpen, title, product, del
         }
 
     }
-    async function handleEditProduct(data: object) {
+    async function handleEditProduct(data: any) {
         try {
             setAlert(null)
-            await axiosInstance.put(`products/${product?.id}`, data, {
+            const formData = new FormData();
+            formData.append('name', data.name);
+            formData.append('description', data.description);
+            formData.append('price', Number(data.price));
+            formData.append('quantity', data.quantity);
+            formData.append('category', data.category);
+            formData.append('picture', file);
+            await axiosInstance.put(`products/${product?.id}`, formData, {
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${session?.data?.access_token}`
                 }
             });
@@ -115,7 +124,7 @@ export default function ModalProduct({ isOpen, setModalOpen, title, product, del
 
     }
 
-  
+
 
     return (
         <>
@@ -183,11 +192,18 @@ export default function ModalProduct({ isOpen, setModalOpen, title, product, del
                                                 <label htmlFor="picture" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Foto Produto</label>
                                                 <input type="file" onChange={handleFileChange} name="picture" id="picture" className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Nome produto" />
                                             </div>
+                                            <div className="col-span-2">
+
+                                                <label htmlFor="quantity" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantidade</label>
+                                                <input type="number"  {...register('quantity')} name="quantity" id="quantity" className=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Digite a quantidade desse produto" />
+
+                                            </div>
                                             <div className="col-span-2 sm:col-span-1">
                                                 <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Preço</label>
-                                                
+
                                                 <input type="number"  {...register('price')} name="price" id="price" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="R$ 20,00" />
                                             </div>
+
                                             <div className="col-span-2 sm:col-span-1">
                                                 <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoria</label>
                                                 <select id="category" {...register('category')} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
