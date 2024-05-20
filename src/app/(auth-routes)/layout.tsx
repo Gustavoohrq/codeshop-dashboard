@@ -12,7 +12,6 @@ export default async function AuthLayout({
   children,
 }: AuthLayoutProps) {
   const session = await getServerSession(nextAuthOptions)
-  console.log(session)
   if(session) {
     redirect('/home')
   }
