@@ -73,5 +73,4 @@ Para executar o Dashboard de Loja Online localmente, siga estas etapas:
 
 5. **Acesse o Aplicativo**: Abra o navegador e acesse o aplicativo em `http://localhost:3000`. Você será redirecionado para a página de login, onde poderá fazer login com suas credenciais de usuário.
 
-Com estas instruções, você estará pronto para explorar e utilizar o Dashboard de Loja Online em seu ambiente local!
 
